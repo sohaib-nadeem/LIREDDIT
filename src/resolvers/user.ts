@@ -69,7 +69,7 @@ export class UserResolver {
         return {user};
     }
 
-    @Query(() => UserResponse)
+    @Mutation(() => UserResponse)
     async login(@Arg('options') options: UsernamePasswordInput, @Ctx() {em, req}: MyContext): Promise<UserResponse> {
         const emFork = em.fork();
         const user = await emFork.findOne(User, {username: options.username});
@@ -88,7 +88,7 @@ export class UserResolver {
 
         req.session.userId = user.id;
         //req.session.save();
-        console.log(req.session.id); 
+        //console.log("session id", req.session.id); 
 
         return {user};
     }
@@ -96,7 +96,7 @@ export class UserResolver {
     @Query(() => User, {nullable: true})
     async me(@Ctx() {em, req}: MyContext): Promise<User | null> {
 
-        console.log(req.session.id); 
+        //console.log("session id", req.session.id); 
         
         // not logged in
         if (!req.session.userId) {

@@ -11,8 +11,9 @@ import { PostResolver } from "./resolvers/post";
 import { UserResolver } from "./resolvers/user";
 import session from "express-session";
 import connectPgSimple from 'connect-pg-simple';
-import { MyContext } from "./types";
-
+//import { MyContext } from "./types";
+//import { ApolloServerPluginLandingPageLocalDefault, ApolloServerPluginLandingPageProductionDefault } from '@apollo/server/plugin/landingPage/default';
+import cors from 'cors';
 
 const main = async () => {
     const orm = await MikroORM.init(mikroOrmConfig);
@@ -27,6 +28,11 @@ const main = async () => {
     //app.get('/', (_, res) => {
     //    res.send('hello');
     //})
+
+    app.use(cors({
+        origin: 'http://localhost:3000',
+        credentials: true
+    }))
 
     app.use(session({
         name: "qid",
@@ -62,7 +68,10 @@ const main = async () => {
 
     await apolloServer.start();
 
-    apolloServer.applyMiddleware({ app });
+    apolloServer.applyMiddleware({ 
+        app, 
+        cors: false
+    });
 
     app.listen(4000, () => {
         console.log('server started on localhost:4000');
